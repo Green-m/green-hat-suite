@@ -9,6 +9,7 @@ Put this green hat on others head.
 gem install os   
 apt-get install mingw-w64
 apt-get install wine
+
 # install tdm-gcc from sourceforge
 wine "$(wget https://sourceforge.net/projects/tdm-gcc/files/latest/download -O -)" 
 ```
