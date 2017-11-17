@@ -14,6 +14,10 @@ apt-get install wine
 wine "$(wget https://sourceforge.net/projects/tdm-gcc/files/latest/download -O -)" 
 ```
 
+Notice:
+Please use ruby 2.2.x or above,otherwise it could cause some error.
+
+
 ## Start green-hat-suite
 ```
 git clone https://github.com/Green-m/green-hat-suite.git
