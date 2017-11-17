@@ -1,6 +1,6 @@
 # Green-hat-suite
 -------------------------------------------
-Green-hat-suite is a tool to make meterpreter/shell evade antivirus.  
+Green-hat-suite is a tool to make meterpreter evade antivirus.  
 
 Put this green hat on others head.
 
