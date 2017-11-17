@@ -22,6 +22,8 @@ wine tdm-gcc.exe
 
 ## Start green-hat-suite
 ```
+git clone https://github.com/Green-m/green-hat-suite.git
+cd green-hat-suite
 ruby greenhat.rb
 
 ```
