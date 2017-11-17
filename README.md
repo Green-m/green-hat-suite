@@ -15,8 +15,8 @@ TMP=`mktemp /tmp/XXXXXXXXX.exe` && wget https://sourceforge.net/projects/tdm-gcc
 ```
 
 Notice:
-Please use ruby 2.2.x or above,otherwise it could cause some error.
-
+Please use ruby 2.2.x or above,otherwise it could cause some error.  
+***You must install metasploit before start!***
 
 ## Start green-hat-suite
 ```
