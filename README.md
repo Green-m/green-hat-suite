@@ -27,3 +27,10 @@ cd green-hat-suite
 ruby greenhat.rb
 
 ```
+
+![image](https://github.com/Green-m/green-hat-suite/blob/master/image/pic1.png)
+
+Upload to virustotal   
+
+![image](https://github.com/Green-m/green-hat-suite/blob/master/image/pic2.png)
+
