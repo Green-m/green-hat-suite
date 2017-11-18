@@ -6,6 +6,7 @@ Put this green hat on others head.
 
 ## Install on Kali
 ```
+apt-get install metasploit-framework
 gem install os   
 apt-get install mingw-w64
 apt-get install wine
@@ -16,9 +17,10 @@ TMP=`mktemp /tmp/XXXXXXXXX.exe` && wget https://sourceforge.net/projects/tdm-gcc
 
 Notice:
 Please use ruby 2.2.x or above,otherwise it could cause some error.  
-***You must install metasploit before start!***
 
-## Start green-hat-suite
+
+## Start green-hat-suite  
+***You must install metasploit before start!***
 ```
 git clone https://github.com/Green-m/green-hat-suite.git
 cd green-hat-suite
