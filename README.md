@@ -6,7 +6,7 @@ Put this green hat on others head.
 
 ## Install on Kali
 ```
-apt-get install metasploit-framework
+#apt-get install metasploit-framework
 gem install os   
 apt-get install mingw-w64
 apt-get install wine
