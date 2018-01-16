@@ -39,6 +39,22 @@ ruby greenhat.rb
 
 ![image](https://github.com/Green-m/green-hat-suite/blob/master/image/pic1.png)
 
+```
+Set other option if you have 
+```
+
+set other advanced option, its format is like below :
+
+```
+EnableStageEncoding=true StagerEncoder=x86/fnstenv_mov 
+```
+
+All the advanced options according to metasploit. 
+
+![image](https://github.com/Green-m/green-hat-suite/blob/master/image/image.png) 
+
+Run metasploit to find more details.  
+
 Upload to virustotal   
 
 ![image](https://github.com/Green-m/green-hat-suite/blob/master/image/pic2.png)
