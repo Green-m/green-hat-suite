@@ -21,6 +21,21 @@ module Options
     COMPILERS_LINUX = ['mingw32','tdm_gcc']
 end
 
+class String
+  def blank?
+    if strip.empty?
+        return true
+    else
+        return false
+    end
+  end
+end
+
+class NilClass
+  def blank?
+    return true
+  end
+end
 
 
 def random_hex(range=(1..10000))
