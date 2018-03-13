@@ -33,24 +33,28 @@ class Console
         
 
         puts %q{
-  ____                          _           _   
- / ___|_ __ ___  ___ _ __      | |__   __ _| |_ 
-| |  _| '__/ _ \/ _ \ '_ \     | '_ \ / _` | __|
-| |_| | | |  __/  __/ | | |    | | | | (_| | |_ 
- \____|_|  \___|\___|_| |_|    |_| |_|\__,_|\__|
-                                                
+            
+  ____                       _           _                     
+ / ___|_ __ ___  ___ _ __   | |__   __ _| |_   _ __  _ __ ___  
+| |  _| '__/ _ \/ _ \ '_ \  | '_ \ / _` | __| | '_ \| '__/ _ \ 
+| |_| | | |  __/  __/ | | | | | | | (_| | |_  | |_) | | | (_) |
+ \____|_|  \___|\___|_| |_| |_| |_|\__,_|\__| | .__/|_|  \___/ 
+                                              |_|              
 
 }
-        puts "Version:alpha"
-        puts "Updated:18-01-16"
-        puts "Green-hat-suite is a tool to make meterpreter/shell evade antivirus."
+        
+        puts "Updated:18-01-15"
+        puts "Green-hat-suite pro is a tool to make meterpreter/shell evade antivirus."
         puts "Put this green hat on others head."
         puts green("************************************************************************")
         puts green("[*] ")+"windows/meterpreter/reverse_http\t\t\tWindows Reverse HTTP Stager (wininet)"
         puts green("[*] ")+"windows/meterpreter/reverse_https\t\t\tWindows Reverse HTTPS Stager (wininet)"
         puts green("[*] ")+"windows/meterpreter/reverse_tcp   \t\t\tReverse TCP Stager"
+        puts green("[*] ")+"windows/meterpreter/reverse_tcp_dns\t\t\tReverse TCP Stager (DNS)"
         puts green("[*] ")+"windows/meterpreter/reverse_tcp_rc4\t\t\tReverse TCP Stager (RC4 Stage Encryption, Metasm)"
+        puts green("[*] ")+"windows/meterpreter/reverse_tcp_rc4_dns\t\tReverse TCP Stager (RC4 Stage Encryption DNS, Metasm)"
         puts green("[*] ")+"windows/meterpreter/reverse_winhttp\t\t\tWindows Reverse HTTP Stager (winhttp)"
+        puts green("[*] ")+"windows/meterpreter/reverse_winhttps\t\tWindows Reverse HTTPS Stager (winhttp)"
         puts green("[*] ")+"custom_payload\t\t\t\t\tLoad custom raw payload with file."
         puts green("************************************************************************")
 

@@ -5,11 +5,6 @@ require 'securerandom'
 require 'os'
 require 'open3'
 
-if OS.windows?
-    output_bad "Not support windows now"
-    exit()
-end
-
 module Options
 
     if OS.windows?
@@ -18,6 +13,8 @@ module Options
         PLATFORM = 'linux'
     end
 
+#    COMPILERS_WINDOWS = ['cl','clang','mingw32','tdm_gcc']
+    COMPILERS_WINDOWS = ['cl','mingw32','tdm_gcc']
     COMPILERS_LINUX = ['mingw32','tdm_gcc']
 end
 
@@ -36,7 +33,6 @@ class NilClass
     return true
   end
 end
-
 
 def random_hex(range=(1..10000))
     lenth = rand(range)
@@ -112,7 +108,7 @@ module Encoder
         shellcode = shellcode.scan(/\\x.{2}/)
     end
 
-        def shellcode_xor(shellcode,key=nil)
+    def shellcode_xor(shellcode,key=nil)
         key = key||SecureRandom.hex
         shellcode = hex_xor_hex(hex_strip_prefix(shellcode),key)
         hex_to_rubyshellcode shellcode

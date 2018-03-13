@@ -8,7 +8,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'env'
 
 
-
+Compilers::compilers_check
 
 options = Starter::Console.new.start
 
@@ -24,9 +24,9 @@ end
 
 begin
 
-code = PayloadMaker.new(shellcode,false).compile_random
+code = PayloadMaker.new(shellcode).compile_random
 
-Compilers::compilers_check
+
 ExeMaker.new(code).ramdom_compiler
 
 rescue Exception => e

