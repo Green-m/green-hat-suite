@@ -13,9 +13,10 @@ Green-hat-suite is a tool to make meterpreter evade antivirus.
 
 Put this green hat on others head.
 
-## Install on Kali
+## Install on Kali/ubuntu/debian
 ```
-#apt-get install metasploit-framework
+# msf installed default on kali
+# apt-get install metasploit-framework 
 gem install os   
 apt-get install mingw-w64
 apt-get install wine
@@ -24,12 +25,47 @@ apt-get install wine
 TMP=`mktemp /tmp/XXXXXXXXX.exe` && wget https://sourceforge.net/projects/tdm-gcc/files/latest/download -O $TMP && wine $TMP && rm $TMP
 ```
 
-Notice:
-Please use ruby 2.2.x or above,otherwise it could cause some error.  
+## Install on windows   
 
+To install Green-hat-suite on windows is a little complicated, but it is recommanded to use it on windows for best result.  
+
+So follow me step by step . 
+
+- **Install ruby**  
+
+  Download and install RubyInstallers from https://rubyinstaller.org/downloads/  
+
+  Notice: Please use `ruby 2.2.x ` or above,otherwise it could cause some error.  
+
+- **Install  Metasploit-framework**  
+
+  Download and install metasploit-framework from https://windows.metasploit.com/  
+
+- **Install Compilers**  
+
+  `Be sure at least one of below compliers installed.`
+
+  Download and install tdm-gcc from https://sourceforge.net/projects/tdm-gcc/  
+  
+  Download and install mingw32 from https://sourceforge.net/projects/mingw-w64/    
+  
+  (**Recommanded**) Download and install windows command line compiler  http://landinghub.visualstudio.com/visual-cpp-build-tools 
+
+
+
+If warning says no mingw32, add enviroment varible in mingw32 root path like below.  
+```
+SET mingwpath=%~dp0mingw\mingw32\bin\
+setx PATH "%PATH%;%mingwpath%; " 
+```
+
+If you download all of these installer in the same  directory, you can run the install.bat to install it .
+
+
+The installation will last several hours, be patient. 
 
 ## Start green-hat-suite  
-***You must install metasploit before start!***
+
 ```
 git clone https://github.com/Green-m/green-hat-suite.git
 cd green-hat-suite
