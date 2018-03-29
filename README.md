@@ -90,6 +90,12 @@ set other advanced option, its format is like below :
 ```
 EnableStageEncoding=true StagerEncoder=x86/fnstenv_mov 
 ```
+
+
+All the advanced options according to metasploit. 
+
+![image](https://github.com/Green-m/green-hat-suite/blob/master/image/image.png) 
+
 ```
 Payload advanced options (windows/meterpreter/reverse_tcp):
 
@@ -131,10 +137,6 @@ Payload advanced options (windows/meterpreter/reverse_tcp):
 
 ```
 
-
-All the advanced options according to metasploit. 
-
-![image](https://github.com/Green-m/green-hat-suite/blob/master/image/image.png) 
 
 Run metasploit to find more details.  
 
