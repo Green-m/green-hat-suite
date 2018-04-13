@@ -17,9 +17,8 @@ if options[:file]
     bin = File.binread(options[:file] )
     shellcode = Encoder::bin_to_cshellcode(bin)
 else
-    shellcode = MsfRunner.new(options).run
+    options[:shellcode] = MsfRunner.new(options).run
 end
-
 
 #debug
 
