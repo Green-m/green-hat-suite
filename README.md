@@ -14,7 +14,7 @@ Green-hat-suite is a tool to make meterpreter evade antivirus.
 Put this green hat on others head. 
 
 ## To do 
-- [ ] Add windows meterpreter service. 
+- [x] Add windows meterpreter service. 
 - [ ] Add installation automatically script on windows. 
 - [ ] Add more document.
 
