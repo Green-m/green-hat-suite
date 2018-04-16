@@ -116,6 +116,21 @@ class Console
 
         end
 
+        output_choose "Would you like it to be a service?(y/N)"
+        @options[:service] = gets.chomp.downcase.eql?('y') 
+        if @options[:service]
+            output_choose "Set the service name: (default:Meterpreter)"
+            @options[:service_name] = gets.chomp
+            @options[:service_name] = 'Meterpreter' if @options[:service_name].eql?""
+
+            output_choose "Set the service display name: (default:Meterpreter Service)"
+            @options[:display_name] = gets.chomp
+            @options[:display_name] = 'Meterpreter Service' if @options[:display_name].eql?""
+
+            output_choose "Set the service retry wait time: (default:5000, millisecond)"
+            @options[:sleep_time] = gets.chomp
+            @options[:sleep_time] = 5000 if @options[:sleep_time].eql?""
+        end
         
         output_choose "Set other option if you have (default:none):"
         @options[:other] += gets.chomp 
