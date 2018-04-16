@@ -43,7 +43,7 @@ class Console
 
 }
         
-        puts "Updated:18-01-15"
+        puts "Updated:18-04-16"
         puts "Green-hat-suite pro is a tool to make meterpreter/shell evade antivirus."
         puts "Put this green hat on others head."
         puts green("************************************************************************")
