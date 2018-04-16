@@ -11,7 +11,7 @@ require 'env'
 Compilers::compilers_check
 
 options = Starter::Console.new.start
-options[:debug] = true
+#options[:debug] = true
 
 if options[:file] 
     bin = File.binread(options[:file] )
@@ -20,10 +20,12 @@ else
     options[:shellcode] = MsfRunner.new(options).run
 end
 
-#debug
-
 begin
-	code = PayloadMaker.new(options).compile_random
+	if options[:service]
+		code = PayloadMaker.new(options).compile_service
+	else
+		code = PayloadMaker.new(options).compile_random
+	end
 	ExeMaker.new(code).ramdom_compiler
 rescue Exception => e
   	output_bad e.message
