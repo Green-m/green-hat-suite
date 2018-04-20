@@ -331,7 +331,7 @@ class PayloadMaker
         code =  "#include <windows.h>\n"
         code << "#include <stdio.h>\n"
         code << fake_includes.join("\n")
-        code << "#pragma comment(lib,"advapi32.lib")\n"
+        code << "#pragma comment(lib,'advapi32.lib')\n"
         code << "\n"
         code << %Q{#define SERVICE_NAME  "#{service_name}" \n}
         code << %Q{#define DISPLAY_NAME  "#{display_name}"\n}
