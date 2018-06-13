@@ -43,4 +43,6 @@ The installation will last several hours, be patient.
 
 see https://github.com/Green-m/green-hat-suite/wiki/Use-green-hat-suite 
 
-Contact to me If you have any question .
+Contact to me If you have any question.  
+
+Do not do evil.
