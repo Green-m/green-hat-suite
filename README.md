@@ -22,7 +22,7 @@ Put this green hat on others head.
 ## Install on Kali/ubuntu/debian
 ```
 # msf installed default on kali
-# apt-get install metasploit-framework 
+apt-get install metasploit-framework 
 gem install os   
 apt-get install mingw-w64
 apt-get install wine
